@@ -4,9 +4,6 @@ Public Class Form1
     Const connectionString As String = "server=localhost;port=3306;userid=root;password=root;database='supermarket'"
     Dim mysqlConn As MySqlConnection
 
-
-
-
     Public Sub getDBdata()
 
         Dim query As String =
@@ -34,5 +31,9 @@ Public Class Form1
 
     Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
 
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        entries.Show()
     End Sub
 End Class
