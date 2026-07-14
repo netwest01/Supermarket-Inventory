@@ -1,7 +1,7 @@
 ﻿Imports MySql.Data.MySqlClient
 Public Class Form1
 
-    Const connectionString As String = "server=localhost;port=3306;userid=root;password=root;database='supermarket'"
+    Const connectionString As String = "server=localhost;port=3306;userid=root;password=root;database=supermarket"
     Dim mysqlConn As MySqlConnection
 
     Public Sub getDBdata()
@@ -20,8 +20,10 @@ Public Class Form1
             dt.Load(reader)
             DataGridView1.DataSource = dt
         Catch ex As Exception
-            MessageBox.Show("Error connecting to database: " & ex.Message)
+            MessageBox.Show(ex.Message)
             Return
+        Finally
+            mysqlConn.Close()
         End Try
     End Sub
 
@@ -29,11 +31,14 @@ Public Class Form1
         getDBdata()
     End Sub
 
-    Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
-
-    End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        entries.Show()
+        entries.ShowDialog()
+        getDBdata()
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        sales.ShowDialog()
+        getDBdata()
     End Sub
 End Class

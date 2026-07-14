@@ -1,6 +1,6 @@
 ﻿Imports MySql.Data.MySqlClient
 
-Public Class entries
+Public Class sales
     'データベース接続文字列
     Const connectionString As String = "server=localhost;port=3306;userid=root;password=root;database=supermarket"
     Dim mysqlConn As MySqlConnection
@@ -10,9 +10,9 @@ Public Class entries
     Public Sub getDBdata()
 
         Dim query As String =
-            "select tpe.entry_id, mp.product_id, mp.product_name, tpe.quantity, tpe.entry_datetime from m_products mp
-            left join t_product_entries tpe
-            on mp.product_id = tpe.product_id"
+            "select tps.sale_id, mp.product_id, mp.product_name, tps.quantity, tps.sale_datetime from m_products mp
+            left join t_product_sales tps
+            on mp.product_id = tps.product_id"
         mysqlConn = New MySqlConnection(connectionString)
         Dim command As New MySqlCommand(query, mysqlConn)
         Try
@@ -29,7 +29,7 @@ Public Class entries
         End Try
     End Sub
 
-    Private Sub entries_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub sales_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         getDBdata()
     End Sub
 
@@ -37,12 +37,12 @@ Public Class entries
     Private Sub DataGridView1_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellClick
 
         Dim selectedRow = DataGridView1.CurrentRow
-        Dim entryId As Integer
+        Dim saleId As Integer
         If selectedRow.Cells(0).Value Is DBNull.Value Then
             MessageBox.Show("選択された行のデータがありません。")
             Return
         Else
-            entryId = Integer.Parse(selectedRow.Cells(0).Value.ToString())
+            saleId = Integer.Parse(selectedRow.Cells(0).Value.ToString())
         End If
 
         Dim productId As String = selectedRow.Cells(1).Value.ToString()
@@ -52,7 +52,7 @@ Public Class entries
         TextBox1.Text = productId
         TextBox2.Text = quantity
         DateTimePicker1.Value = dateTime
-        TextBox4.Text = entryId.ToString()
+        TextBox4.Text = saleId.ToString()
 
     End Sub
 
@@ -70,7 +70,7 @@ Public Class entries
         End Try
         Dim dateTime As String = DateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss")
 
-        Dim query As String = "insert into t_product_entries (product_id, quantity, entry_datetime) values ('" & productId & "', '" & quantity & "', '" & dateTime & "')"
+        Dim query As String = "insert into t_product_sales (product_id, quantity, sale_datetime) values ('" & productId & "', '" & quantity & "', '" & dateTime & "')"
 
         mysqlConn = New MySqlConnection(connectionString)
         Dim command As New MySqlCommand(query, mysqlConn)
@@ -112,9 +112,9 @@ Public Class entries
         Dim productId As Integer = Integer.Parse(TextBox1.Text)
         Dim quantity As Integer = Integer.Parse(TextBox2.Text)
         Dim dateTime As String = DateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss")
-        Dim entryId As Integer = Integer.Parse(TextBox4.Text)
+        Dim saleId As Integer = Integer.Parse(TextBox4.Text)
 
-        Dim query As String = "UPDATE t_product_entries SET product_id = '" & productId & "', quantity = '" & quantity & "', entry_datetime = '" & dateTime & "' WHERE entry_id = '" & entryId & "'"
+        Dim query As String = "UPDATE t_product_sales SET product_id = '" & productId & "', quantity = '" & quantity & "', sale_datetime = '" & dateTime & "' WHERE sale_id = '" & saleId & "'"
 
         mysqlConn = New MySqlConnection(connectionString)
         Dim command As New MySqlCommand(query, mysqlConn)
@@ -132,8 +132,8 @@ Public Class entries
 
     '削除処理
     Private Sub buttonDel_Click(sender As Object, e As EventArgs) Handles buttonDel.Click
-        Dim entryId As Integer = Integer.Parse(TextBox4.Text)
-        Dim query As String = "DELETE FROM t_product_entries WHERE entry_id = '" & entryId & "'"
+        Dim saleId As Integer = Integer.Parse(TextBox4.Text)
+        Dim query As String = "DELETE FROM t_product_sales WHERE sale_id = '" & saleId & "'"
 
         mysqlConn = New MySqlConnection(connectionString)
         Dim command As New MySqlCommand(query, mysqlConn)
